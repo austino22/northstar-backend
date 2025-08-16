@@ -30,7 +30,7 @@ app = FastAPI(title="NorthStar API", version="0.3.0")
 origins = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://northstar-frontend-kohl.vercel.app",
+    "https://northstar-frontend-kohl.vercel.app"
     # "https://your-frontend.vercel.app",
     # And your custom domain when ready:
     # "https://app.yourdomain.com",
