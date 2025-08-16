@@ -67,12 +67,12 @@ def register(user_in: UserCreate, db: Session = Depends(get_db)):
 
 @app.post("/auth/login", response_model=Token)
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    # OAuth2PasswordRequestForm sends "username" as the identifier (we use email there)
     user = db.query(User).filter(User.email == form_data.username).first()
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
     access = create_access_token(subject=user.email)
-    return Token(access_token=access)
+    # IMPORTANT: return standard fields
+    return {"access_token": access, "token_type": "bearer"}
 
 
 @app.get("/auth/me", response_model=UserOut)

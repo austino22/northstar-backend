@@ -1,45 +1,38 @@
-from pydantic import BaseModel, EmailStr, Field
+# backend/schemas.py
+from pydantic import BaseModel, EmailStr
 from typing import Optional
 
-# -------- users --------
 class UserCreate(BaseModel):
     email: EmailStr
-    password: str = Field(min_length=8, max_length=128)
+    password: str
 
 class UserOut(BaseModel):
     id: int
     email: EmailStr
     class Config:
-        from_attributes = True
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
+        orm_mode = True
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
 
-class TokenData(BaseModel):
-    sub: Optional[str] = None
+class GoalCreate(BaseModel):
+    name: str
+    target_amount: float
+    target_date: str
+    current_amount: float = 0.0
 
-# -------- goals --------
-class GoalBase(BaseModel):
+class GoalOut(BaseModel):
+    id: int
     name: str
     target_amount: float
     target_date: str
     current_amount: float
-
-class GoalCreate(GoalBase):
-    pass
+    class Config:
+        orm_mode = True
 
 class GoalUpdate(BaseModel):
     name: Optional[str] = None
     target_amount: Optional[float] = None
     target_date: Optional[str] = None
     current_amount: Optional[float] = None
-
-class GoalOut(GoalBase):
-    id: int
-    class Config:
-        from_attributes = True
