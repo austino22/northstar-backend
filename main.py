@@ -13,6 +13,15 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="NorthStar API", version="0.2.0")
 
+origins = [
+    "http://localhost:5173",
+    # add your production frontend later, e.g.:
+    # "https://YOUR-FRONTEND-NAME.vercel.app",
+    # "https://app.yourdomain.com",
+    "*",  # keep permissive during testing; tighten later
+]
+
+
 # CORS for local dev (tighten in prod)
 app.add_middleware(
     CORSMiddleware,
@@ -22,6 +31,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+    
 # ---------- Auth ----------
 @app.post("/auth/register", response_model=UserOut, status_code=201)
 def register(user_in: UserCreate, db: Session = Depends(get_db)):
